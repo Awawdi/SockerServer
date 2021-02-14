@@ -1,0 +1,38 @@
+import java.net.*;
+import java.io.*;
+
+public class Server
+{
+	public static String serverName = "LOCALHOST";
+	public static int serverPortNumber = 4000;
+
+	public static void main(String args[])
+	{
+		Socket socket = null;
+		ServerSocket server = null;
+		InputStream is = null;
+		DataInputStream dis = null;
+		OutputStream os = null;
+		DataOutputStream dos = null;
+		try
+		{
+			server = new ServerSocket(serverPortNumber);
+			while(true)
+			{
+				System.out.println("server.accept()...");
+				socket = server.accept();
+                
+				is = socket.getInputStream();
+				dis = new DataInputStream(is);
+				os = socket.getOutputStream();
+				dos = new DataOutputStream(os);
+				String email = dis.readUTF();
+				System.out.println(email);
+			}
+		}	
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+    }
+}
