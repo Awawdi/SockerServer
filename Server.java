@@ -1,34 +1,38 @@
 import java.net.*;
 import java.io.*;
 
-public class Server 
-{
-	public static void main(String args[]) throws IOException
-	{
-        ServerSocket GServerSocket = new ServerSocket(4000);
-        Socket Gsocket = null;
+public class Server {
+    public static void main(String[] args) throws IOException {
+        
+            // create new server socket for emails - listening on port 4000
+            ServerSocket ServerSocket = new ServerSocket(4000);
 
-        ServerSocket WServerSocket = new ServerSocket(3000);
-        Socket Wsocket = null;
+            try {
+            
 
-        ServerSocket YServerSocket = new ServerSocket(2000);
-        Socket YSocket = null;
+            while (true) {
+                System.out.println("server.accept()...");
 
-        Multithread GmailThread= new Multithread(Gsocket,GServerSocket);
-        Multithread WallaThread= new Multithread(Wsocket,WServerSocket);
-        Multithread YahooThread= new Multithread(YSocket,YServerSocket);
+                //GMAIL thread socket listening to the port on a unique thread                
+                Multithread GmailThread = new Multithread(ServerSocket.accept());
+                GmailThread.start();
 
-        while(true)
-        {
-            System.out.println("server.accept()...");
+                //WALLA thread socket listening to the port on a unique thread                
+                Multithread WallaThread = new Multithread(ServerSocket.accept());
+                WallaThread.start();
 
-            WallaThread.clientSocket = WallaThread.clientServerSocket.accept();
-            WallaThread.start();
+                //YAHOO thread socket listening to the port on a unique thread                
+                Multithread YahooThread = new Multithread(ServerSocket.accept());
+                YahooThread.start();
 
-            YahooThread.clientSocket = YahooThread.clientServerSocket.accept();
-            YahooThread.start();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            ServerSocket.close();
 
+            System.out.println("Server closes");
+            
         }
     }
 }
-    
